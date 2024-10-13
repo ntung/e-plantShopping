@@ -1,9 +1,21 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import {addItem} from "./CartSlice.jsx";
+import {useDispatch} from "react-redux";
 function ProductList() {
+    const [addedToCart, setAddedToCart] = useState({});
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+
+    const dispatch = useDispatch();
+    const handleAddToCart = (product) => {
+        dispatch(addItem(product));
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
+        }));
+    };
 
     const plantsArray = [
         {
@@ -273,10 +285,12 @@ const handlePlantsClick = (e) => {
                     <div className="product-card">
                     <h2 key={index}>{item.category}</h2>
                     {item.plants.map((plant, id) => (
-                        <><div key={id}><p className="product-title"><strong>{plant.name}</strong></p>
-                            <img src={plant.image} alt={plant.description} className="product-image" />
-                        <p>{plant.description}</p>
-                            <p>Price: {plant.cost}</p></div>
+                        <>
+                            <div key={id}><p className="product-title"><strong>{plant.name}</strong></p>
+                                <img src={plant.image} alt={plant.description} className="product-image"/>
+                                <p>{plant.description}</p>
+                                <p>Price: {plant.cost}</p></div>
+                            <button className="product-button" onClick={() => handleAddToCart(plant)}>Add to Cart</button>
                         </>
                     ))}
                     </div>
