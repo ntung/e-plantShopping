@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
+import {convertCurrency} from "./util/Helper.js";
 
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
@@ -9,7 +10,13 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    console.log(cart);
+    let total = 0;
+    cart.map((plant) => {
+      const cost = convertCurrency(plant.cost);
+      total += cost * plant.quantity;
+    });
+    return total;
   };
 
   const handleContinueShopping = (e) => {
@@ -30,6 +37,9 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    let cost = item.cost;
+    cost = convertCurrency(cost);
+    return cost * item.quantity;
   };
 
   return (
