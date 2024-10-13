@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import {decreaseItemQuantity, increaseItemQuantity, removeItem, updateQuantity} from './CartSlice';
 import './CartItem.css';
 import {convertCurrency} from "./util/Helper.js";
 
@@ -20,19 +20,25 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
   const handleContinueShopping = (e) => {
-   
+    onContinueShopping(e);
   };
 
-
+  const handleCheckout = (e) => {
+    alert("Will be implemented later!");
+  }
 
   const handleIncrement = (item) => {
+    console.log("increased");
+    dispatch(increaseItemQuantity(item));
   };
 
   const handleDecrement = (item) => {
-   
+    console.log("decreased");
+    dispatch(decreaseItemQuantity(item));
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item));
   };
 
   // Calculate total cost based on quantity for an item
@@ -67,7 +73,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckout(e)}>Checkout</button>
       </div>
     </div>
   );
