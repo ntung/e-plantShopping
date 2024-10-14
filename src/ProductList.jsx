@@ -2,15 +2,26 @@ import React, {useState, useEffect} from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
 import {addItem} from "./CartSlice.jsx";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ShoppingCartIcon from "./ShoppingCartIcon.jsx";
 
 function ProductList() {
     const [addedToCart, setAddedToCart] = useState({});
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const cartItems = useSelector((state) => state.cart.items);
 
     const dispatch = useDispatch();
+
+    const calculateTotalQuantity = () => {
+        return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    };
+
+    const [totalQuantity, setTotalQuantity] = useState(calculateTotalQuantity());
+    useEffect(() => {
+        setTotalQuantity(calculateTotalQuantity());
+    }, [cartItems]);
+
     const handleAddToCart = (product) => {
         dispatch(addItem(product));
         setAddedToCart((prevState) => ({
@@ -261,12 +272,6 @@ function ProductList() {
         setShowCart(false);
     };
 
-    const calculateTotalItems = (value) => {
-        return value;
-        //let min = 1, max = 20;
-        //return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -285,7 +290,7 @@ function ProductList() {
                 <div style={styleObjUl}>
                     <div><a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>Plants</a></div>
                     <div><a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
-                    <ShoppingCartIcon quantity={calculateTotalItems(0)}/>
+                    <ShoppingCartIcon quantity={totalQuantity}/>
                     </a></div>
                 </div>
             </div>
@@ -314,8 +319,7 @@ function ProductList() {
                 )
                 :
                 (
-                    <CartItem onContinueShopping={handleContinueShopping}
-                              calculateTotalItems={calculateTotalItems}/>
+                    <CartItem onContinueShopping={handleContinueShopping} />
                 )}
         </div>
     );
