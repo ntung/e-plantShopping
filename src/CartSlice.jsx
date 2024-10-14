@@ -19,7 +19,7 @@ export const CartSlice = createSlice({
         increaseItemQuantity: (state, action) => {
             console.log(action.payload);
             const itemToIncrease = state.items.find(item => item.name === action.payload.name);
-            let dk = itemToIncrease !== null && itemToIncrease.quantity >= 1
+            let dk = itemToIncrease !== null && itemToIncrease.quantity >= 0
             console.log(itemToIncrease);
             console.log(dk);
             if (dk) {
@@ -30,11 +30,17 @@ export const CartSlice = createSlice({
             console.log(action.payload);
             const itemToDecrease = state.items.find(item => item.name === action.payload.name);
             console.log(itemToDecrease);
-            const dk = itemToDecrease !== null && itemToDecrease.quantity > 1;
+            const dk = itemToDecrease !== null && itemToDecrease.quantity >= 1;
             console.log(dk);
             if (dk) {
                 itemToDecrease.quantity -= 1;
+                console.log(itemToDecrease.quantity);
+                if (itemToDecrease.quantity === 0) {
+                    //removeItem(state, action); this won't work
+                    state.items = state.items.filter(item => item.name !== action.payload.name);
+                }
             }
+
         },
         removeItem: (state, action) => {
             state.items = state.items.filter(item => item.name !== action.payload.name);

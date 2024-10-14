@@ -29,13 +29,16 @@ const CartItem = ({ onContinueShopping }) => {
   }
 
   const handleIncrement = (item) => {
-    console.log("increased");
     dispatch(increaseItemQuantity(item));
   };
 
   const handleDecrement = (item) => {
-    console.log("decreased");
-    dispatch(decreaseItemQuantity(item));
+    const itemToDecrease = cart.find(plant => plant.name === item.name);
+    if (itemToDecrease !== undefined && itemToDecrease.quantity === 0) {
+      //handleRemove(item);
+    } else {
+      dispatch(decreaseItemQuantity(item));
+    }
   };
 
   const handleRemove = (item) => {
